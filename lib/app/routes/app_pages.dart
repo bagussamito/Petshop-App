@@ -57,7 +57,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.DASHBOARD_ADMIN,
-      page: () => const DashboardAdminView(),
+      page: () => DashboardAdminView(),
       binding: DashboardAdminBinding(),
     ),
     GetPage(
