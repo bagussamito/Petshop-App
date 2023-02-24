@@ -11,10 +11,10 @@ class DashboardAdminController extends GetxController {
 
   // var isPasswordHidden = true.obs;
 
-  Future<DocumentSnapshot<Object?>> getUserDoc() async {
+  Stream<DocumentSnapshot<Object?>> getUserDoc() async* {
     String uid = auth.currentUser!.uid;
     DocumentReference user = firestore.collection("Users").doc(uid);
-    return user.get();
+    yield* user.snapshots();
   }
 
   Stream<DocumentSnapshot<Map<String, dynamic>>>

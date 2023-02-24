@@ -112,11 +112,11 @@
 82                android:value="com.google.firebase.components.ComponentRegistrar" />
 82-->[com.google.firebase:firebase-auth:21.1.0] C:\Users\Administrator\.gradle\caches\transforms-3\4a9da42da7989287787340e3f7e46327\transformed\jetified-firebase-auth-21.1.0\AndroidManifest.xml:69:17-82
 83            <meta-data
-83-->[com.google.firebase:firebase-firestore:24.4.2] C:\Users\Administrator\.gradle\caches\transforms-3\499e10e5f3f8cb73e54279727e058317\transformed\jetified-firebase-firestore-24.4.2\AndroidManifest.xml:19:13-21:85
+83-->[com.google.firebase:firebase-firestore:24.4.3] C:\Users\Administrator\.gradle\caches\transforms-3\fabe7d7698064912011c3f275f57ac07\transformed\jetified-firebase-firestore-24.4.3\AndroidManifest.xml:19:13-21:85
 84                android:name="com.google.firebase.components:com.google.firebase.firestore.FirestoreRegistrar"
-84-->[com.google.firebase:firebase-firestore:24.4.2] C:\Users\Administrator\.gradle\caches\transforms-3\499e10e5f3f8cb73e54279727e058317\transformed\jetified-firebase-firestore-24.4.2\AndroidManifest.xml:20:17-111
+84-->[com.google.firebase:firebase-firestore:24.4.3] C:\Users\Administrator\.gradle\caches\transforms-3\fabe7d7698064912011c3f275f57ac07\transformed\jetified-firebase-firestore-24.4.3\AndroidManifest.xml:20:17-111
 85                android:value="com.google.firebase.components.ComponentRegistrar" />
-85-->[com.google.firebase:firebase-firestore:24.4.2] C:\Users\Administrator\.gradle\caches\transforms-3\499e10e5f3f8cb73e54279727e058317\transformed\jetified-firebase-firestore-24.4.2\AndroidManifest.xml:21:17-82
+85-->[com.google.firebase:firebase-firestore:24.4.3] C:\Users\Administrator\.gradle\caches\transforms-3\fabe7d7698064912011c3f275f57ac07\transformed\jetified-firebase-firestore-24.4.3\AndroidManifest.xml:21:17-82
 86            <meta-data
 86-->[com.google.firebase:firebase-storage:20.1.0] C:\Users\Administrator\.gradle\caches\transforms-3\82b3d7a5d1802e9fa70b6c75bdf3591c\transformed\jetified-firebase-storage-20.1.0\AndroidManifest.xml:32:13-34:85
 87                android:name="com.google.firebase.components:com.google.firebase.storage.StorageRegistrar"
