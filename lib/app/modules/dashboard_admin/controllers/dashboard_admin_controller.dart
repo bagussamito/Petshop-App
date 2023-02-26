@@ -1,34 +1,40 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:firebase_storage/firebase_storage.dart' as s;
 
 class DashboardAdminController extends GetxController {
   //TODO: Implement DashboardHRController
 
+  s.FirebaseStorage storage = s.FirebaseStorage.instance;
+
+  final ImagePicker picker = ImagePicker();
   FirebaseAuth auth = FirebaseAuth.instance;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
+  XFile? image;
+
   // var isPasswordHidden = true.obs;
 
-  Stream<DocumentSnapshot<Object?>> getUserDoc() async* {
+  Stream<QuerySnapshot<Object?>> getUserDoc() {
     String uid = auth.currentUser!.uid;
-    DocumentReference user = firestore.collection("Users").doc(uid);
-    yield* user.snapshots();
+    CollectionReference user = firestore.collection("Users");
+    return user.snapshots();
   }
 
-  Stream<DocumentSnapshot<Map<String, dynamic>>>
-      streamTodayPresenceUser() async* {
-    String uid = auth.currentUser!.uid;
-    String todayID =
-        DateFormat.yMd().format(DateTime.now()).replaceAll("/", "-");
-
-    yield* firestore
-        .collection("Users")
-        .doc(uid)
-        .collection("Presence")
-        .doc(todayID)
-        .snapshots();
+  void pickImage() async {
+    image =
+        await picker.pickImage(source: ImageSource.gallery, imageQuality: 75);
+    if (image != null) {
+      print(image!.name);
+      print(image!.name.split(".").last);
+      print(image!.path);
+    } else {
+      print(image);
+    }
+    update();
   }
 
   final count = 0.obs;
