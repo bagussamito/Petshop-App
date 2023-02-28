@@ -7,6 +7,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:petshop/app/modules/setting/views/setting_view.dart';
 import 'package:petshop/app/theme/theme.dart';
 import 'package:petshop/app/utils/loading.dart';
@@ -19,14 +20,12 @@ class DashboardAdminView extends GetView<DashboardAdminController> {
   final DashboardAdminController controller =
       Get.put(DashboardAdminController());
 
-  final TextEditingController textController = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: StreamBuilder<QuerySnapshot<Object?>>(
-            stream: controller.getUserDoc(),
+            stream: controller.getBarangDoc(),
             builder: (context, snap) {
               if (snap.connectionState == ConnectionState.waiting) {
                 return LoadingView();
@@ -56,7 +55,7 @@ class DashboardAdminView extends GetView<DashboardAdminController> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Container(
-                                width: bodyWidth * 0.9,
+                                width: bodyWidth * 0.75,
                                 height: bodyHeight * 0.085,
                                 child: TextFormField(
                                   textInputAction: TextInputAction.next,
@@ -116,6 +115,23 @@ class DashboardAdminView extends GetView<DashboardAdminController> {
                                               BorderRadius.circular(12))),
                                 ),
                               ),
+                              FloatingActionButton(
+                                backgroundColor: backgroundOrange,
+                                child: Icon(
+                                  FontAwesomeIcons.add,
+                                  color: Red1,
+                                ),
+                                onPressed: () {
+                                  Get.defaultDialog(
+                                      title: "ini dialog",
+                                      content: tambah(),
+                                      onConfirm: () => controller.addBarang(
+                                            controller.namabarangC.text,
+                                            controller.hargabarangC.text,
+                                          ),
+                                      onCancel: (Get.back));
+                                },
+                              ),
                             ],
                           ),
                           ListView.builder(
@@ -127,12 +143,12 @@ class DashboardAdminView extends GetView<DashboardAdminController> {
                               itemCount: listAllDocs.length,
                               // itemCount: 20,
                               itemBuilder: (context, index) {
-                                var nama = {
+                                var foto_barang = {
                                   (listAllDocs[index].data()
-                                      as Map<String, dynamic>)["name"]
+                                      as Map<String, dynamic>)["foto_barang"]
                                 };
                                 var defaultImage =
-                                    "https://ui-avatars.com/api/?name=${nama}&background=fff38a&color=5175c0&font-size=0.33";
+                                    "https://ui-avatars.com/api/?name=${foto_barang}&background=fff38a&color=5175c0&font-size=0.33";
                                 return Padding(
                                   padding: EdgeInsets.only(
                                       bottom: bodyHeight * 0.01),
@@ -149,22 +165,29 @@ class DashboardAdminView extends GetView<DashboardAdminController> {
                                               borderRadius:
                                                   BorderRadius.circular(
                                                       10), // Image border
-                                              child: SizedBox.fromSize(
+                                              child: Container(
+                                                width: bodyWidth * 0.46,
+                                                height: bodyHeight * 0.22,
                                                 // Image radius
-                                                child: Image.asset(
-                                                  'assets/images/foto1.jpg',
-                                                  height: 200,
-                                                  width: 220,
-                                                  fit: BoxFit.fitHeight,
+                                                child: Image.network(
+                                                  "${(listAllDocs[index].data() as Map<String, dynamic>)["foto_barang"]}" !=
+                                                          null
+                                                      ? "${(listAllDocs[index].data() as Map<String, dynamic>)["foto_barang"]}" !=
+                                                              ""
+                                                          ? "${(listAllDocs[index].data() as Map<String, dynamic>)["foto_barang"]}"
+                                                          : defaultImage
+                                                      : defaultImage,
+                                                  fit: BoxFit.fill,
                                                 ),
                                               ),
                                             ),
                                             Text(
-                                              'Ini Adalah Kucing',
+                                              "${(listAllDocs[index].data() as Map<String, dynamic>)["nama_barang"]}",
+                                              textAlign: TextAlign.start,
                                               textScaleFactor: 1,
                                               style: TextStyle(
-                                                  fontWeight: FontWeight.w500,
-                                                  color: Purple),
+                                                fontWeight: FontWeight.w500,
+                                              ),
                                             ),
                                             Row(
                                               mainAxisAlignment:
@@ -178,11 +201,11 @@ class DashboardAdminView extends GetView<DashboardAdminController> {
                                                   width: bodyWidth * 0.02,
                                                 ),
                                                 Text(
-                                                  'Harga Kucing Ini',
+                                                  "${(listAllDocs[index].data() as Map<String, dynamic>)["harga_barang"]}",
+                                                  textAlign: TextAlign.start,
                                                   textScaleFactor: 1,
                                                   style: TextStyle(
                                                     fontWeight: FontWeight.w500,
-                                                    color: Purple,
                                                   ),
                                                 ),
                                                 ClipOval(
@@ -355,6 +378,152 @@ class DashboardAdminView extends GetView<DashboardAdminController> {
 
             // validator: controller
             //     .alamatValidator,
+            style: TextStyle(color: dark),
+            decoration: InputDecoration(
+                prefixIcon: Align(
+                    widthFactor: 1.0,
+                    heightFactor: 1.0,
+                    child: FaIcon(
+                      FontAwesomeIcons.moneyBill1,
+                      color: Red1,
+                    )),
+                hintText: 'Harga Barang',
+                hintStyle: heading6.copyWith(color: Grey1, fontSize: 14),
+                focusColor: Blue1,
+                fillColor: light,
+                filled: true,
+                errorStyle: TextStyle(
+                  fontSize: 13.5,
+                  color: light,
+                  background: Paint()
+                    ..strokeWidth = 13
+                    ..color = errorBg
+                    ..style = PaintingStyle.stroke
+                    ..strokeJoin = StrokeJoin.round,
+                ),
+                errorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: errorBg, width: 1.8),
+                    borderRadius: BorderRadius.circular(12),
+                    gapPadding: 2),
+                focusedErrorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: error, width: 1.8),
+                    borderRadius: BorderRadius.circular(12)),
+                focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Blue1, width: 1.8),
+                    borderRadius: BorderRadius.circular(12)),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12))),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget tambah() {
+    return Expanded(
+      child: Column(
+        children: [
+          Stack(
+            children: [
+              GetBuilder<DashboardAdminController>(
+                builder: (c) {
+                  if (c.image != null) {
+                    return Center(
+                      child: Container(
+                        width: 150,
+                        height: 100,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.grey.shade200,
+                        ),
+                        child: Image.file(
+                          File(c.image!.path),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    );
+                  } else {
+                    return Center(
+                      child: Container(
+                        width: 150,
+                        height: 90,
+                        decoration: BoxDecoration(
+                            color: Colors.grey.shade200,
+                            borderRadius: BorderRadius.circular(10)),
+                      ),
+                    );
+                  }
+                },
+              ),
+              //button untuk ganti foto profil
+              Positioned(
+                child: ClipOval(
+                  child: Material(
+                    color: backgroundOrange,
+                    child: IconButton(
+                      onPressed: () {
+                        controller.pickImage();
+                      },
+                      icon: FaIcon(
+                        FontAwesomeIcons.camera,
+                        color: light,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          TextFormField(
+            textInputAction: TextInputAction.next,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            controller: controller.namabarangC,
+            style: TextStyle(color: dark),
+            decoration: InputDecoration(
+                prefixIcon: Align(
+                    widthFactor: 1.0,
+                    heightFactor: 1.0,
+                    child: Icon(
+                      Icons.input_sharp,
+                      color: Red1,
+                    )),
+                hintText: 'Nama Barang',
+                hintStyle: heading6.copyWith(color: Grey1, fontSize: 14),
+                focusColor: Blue1,
+                fillColor: light,
+                filled: true,
+                errorStyle: TextStyle(
+                  fontSize: 13.5,
+                  color: light,
+                  background: Paint()
+                    ..strokeWidth = 13
+                    ..color = errorBg
+                    ..style = PaintingStyle.stroke
+                    ..strokeJoin = StrokeJoin.round,
+                ),
+                errorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: errorBg, width: 1.8),
+                    borderRadius: BorderRadius.circular(12),
+                    gapPadding: 2),
+                focusedErrorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: error, width: 1.8),
+                    borderRadius: BorderRadius.circular(12)),
+                focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Blue1, width: 1.8),
+                    borderRadius: BorderRadius.circular(12)),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12))),
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          TextFormField(
+            textInputAction: TextInputAction.next,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            controller: controller.hargabarangC,
             style: TextStyle(color: dark),
             decoration: InputDecoration(
                 prefixIcon: Align(

@@ -35,6 +35,7 @@ dependencies:
   hexcolor: ^3.0.1
   iconly: ^1.0.1
   image_picker: ^0.8.6+3
+  rxdart: ^0.27.7
   sizer: ^2.0.15
   syncfusion_localizations: ^20.4.49
 
